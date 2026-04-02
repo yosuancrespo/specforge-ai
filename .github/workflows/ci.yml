@@ -1,0 +1,87 @@
+name: ci
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+
+jobs:
+  platform-tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: platform
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: astral-sh/setup-uv@v5
+      - name: Install platform dependencies
+        run: uv sync --extra dev
+      - name: Run Python tests
+        run: uv run pytest
+      - name: Run CLI smoke flow
+        run: |
+          uv run specforge ingest
+          uv run specforge plan
+          uv run specforge generate
+          uv run specforge run
+          uv run specforge evaluate
+          uv run specforge report
+
+  evals:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install promptfoo
+        run: npm install
+      - name: Run prompt evaluations
+        run: npm run eval:ci
+
+  demo-api:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: demo/api-go
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.23"
+      - name: Build Go demo API
+        run: go build ./cmd/server
+
+  rust-mutator:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: demo/mutator-rust
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Build and run Rust mutator
+        run: cargo run -- --schema ../specs/openapi.yaml --seed cases/basic-orders.json
+
+  contracts:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: demo/contracts
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - uses: foundry-rs/foundry-toolchain@v1
+      - name: Install forge-std
+        run: forge install foundry-rs/forge-std --no-git
+      - name: Run Foundry tests
+        run: forge test
+      - name: Install Hardhat dependencies
+        run: npm --prefix hardhat install
+      - name: Run Hardhat smoke flow
+        run: npm --prefix hardhat run smoke

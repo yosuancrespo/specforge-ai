@@ -1,0 +1,55 @@
+# Operating system
+.DS_Store
+Thumbs.db
+
+# Editors
+.idea/
+.vscode/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.venv/
+venv/
+dist/
+build/
+*.egg-info/
+
+# Node
+node_modules/
+npm-debug.log*
+demo/contracts/hardhat/node_modules/
+
+# Go
+bin/
+coverage.out
+demo/api-go/server.exe
+
+# Rust
+target/
+
+# Foundry / Hardhat
+demo/contracts/cache/
+demo/contracts/out/
+demo/contracts/broadcast/
+demo/contracts/lib/
+demo/contracts/hardhat/cache/
+demo/contracts/hardhat/artifacts/
+demo/contracts/hardhat/contracts/
+demo/contracts/hardhat/typechain-types/
+
+# Runtime artifacts
+artifacts/runs/
+artifacts/tmp/
+results/
+
+# Docker
+*.tar

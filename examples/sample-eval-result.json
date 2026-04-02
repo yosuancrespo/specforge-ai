@@ -1,0 +1,24 @@
+{
+  "score": 0.94,
+  "recommendation": "needs-attention",
+  "metrics": [
+    {
+      "name": "requirements_coverage",
+      "score": 1.0,
+      "threshold": 0.8,
+      "passed": true
+    },
+    {
+      "name": "grounded_risk_detection",
+      "score": 1.0,
+      "threshold": 0.7,
+      "passed": true
+    },
+    {
+      "name": "prompt_regression_readiness",
+      "score": 0.83,
+      "threshold": 0.75,
+      "passed": true
+    }
+  ]
+}

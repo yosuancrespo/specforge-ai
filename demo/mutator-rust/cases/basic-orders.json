@@ -1,0 +1,15 @@
+[
+  {
+    "customer_id": "customer-001",
+    "items": [
+      {
+        "sku": "starter-plan",
+        "quantity": 1
+      }
+    ],
+    "amount": 99,
+    "discount": 0,
+    "currency": "USD"
+  }
+]
+

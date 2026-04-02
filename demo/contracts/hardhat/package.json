@@ -1,0 +1,12 @@
+{
+  "name": "specforge-hardhat-smoke",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "smoke": "node scripts/sync-source.js && hardhat run scripts/smoke-deploy.js"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-ethers": "^3.0.8",
+    "hardhat": "^2.24.3"
+  }
+}

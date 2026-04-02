@@ -1,0 +1,29 @@
+{
+  "run_id": "specforge-local-run",
+  "adapter_runs": [
+    {
+      "adapter": "go-api",
+      "status": "failed",
+      "findings": [
+        {
+          "id": "go-live-weak-validation",
+          "title": "Go API accepted a weak order payload",
+          "severity": "high",
+          "summary": "The live API accepted an order with no items and zero amount. The spec requires at least one item and a positive amount."
+        },
+        {
+          "id": "go-live-summary-drift",
+          "title": "Go API summary drifted from the documented discount rule",
+          "severity": "medium",
+          "summary": "The live summary endpoint returned a final total that does not subtract the discount from the order amount as documented in the API contract."
+        }
+      ]
+    },
+    {
+      "adapter": "solidity",
+      "status": "passed",
+      "findings": []
+    }
+  ],
+  "generated_case_count": 5
+}

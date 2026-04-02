@@ -1,0 +1,48 @@
+[project]
+name = "specforge-ai"
+version = "0.1.0"
+description = "AI-augmented quality engineering orchestration platform"
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "MIT" }
+authors = [
+  { name = "Yosuan Crespo" }
+]
+dependencies = [
+  "fastapi>=0.115.0",
+  "httpx>=0.28.0",
+  "pgvector>=0.3.6",
+  "psycopg[binary]>=3.2.0",
+  "pydantic>=2.9.0",
+  "pyyaml>=6.0.2",
+  "sqlalchemy>=2.0.36",
+  "typer>=0.15.1",
+  "uvicorn[standard]>=0.34.0"
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.3.4",
+  "pytest-cov>=6.0.0",
+  "ruff>=0.9.6"
+]
+
+[project.scripts]
+specforge = "specforge_ai.cli:app"
+
+[build-system]
+requires = ["setuptools>=75.8.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100

@@ -1,0 +1,14 @@
+{
+  "name": "specforge-ai",
+  "version": "0.1.0",
+  "private": true,
+  "description": "AI-augmented quality engineering portfolio monorepo",
+  "scripts": {
+    "eval": "promptfoo eval -c promptfoo.config.js",
+    "eval:ci": "promptfoo eval -c promptfoo.config.js --output results/promptfoo-results.json",
+    "contracts:smoke": "npm --prefix demo/contracts/hardhat run smoke"
+  },
+  "devDependencies": {
+    "promptfoo": "^0.121.3"
+  }
+}

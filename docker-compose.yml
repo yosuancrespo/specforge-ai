@@ -1,0 +1,68 @@
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: specforge-postgres
+    environment:
+      POSTGRES_DB: specforge
+      POSTGRES_USER: specforge
+      POSTGRES_PASSWORD: specforge
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  demo-api:
+    build:
+      context: ./demo/api-go
+    container_name: specforge-demo-api
+    ports:
+      - "8080:8080"
+
+  platform-api:
+    build:
+      context: .
+      dockerfile: platform/Dockerfile
+    container_name: specforge-platform
+    env_file:
+      - .env
+    environment:
+      SPECFORGE_DATABASE_URL: postgresql+psycopg://specforge:specforge@postgres:5432/specforge
+      SPECFORGE_DEMO_API_BASE_URL: http://demo-api:8080
+      SPECFORGE_REPO_ROOT: /workspace
+    depends_on:
+      - postgres
+      - demo-api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./artifacts:/workspace/artifacts
+
+  dashboard:
+    build:
+      context: ./dashboard
+    container_name: specforge-dashboard
+    env_file:
+      - .env
+    environment:
+      SPECFORGE_PLATFORM_API_URL: http://platform-api:8000
+    depends_on:
+      - platform-api
+    ports:
+      - "8501:8501"
+
+  n8n:
+    image: docker.n8n.io/n8nio/n8n:1.91.3
+    container_name: specforge-n8n
+    environment:
+      N8N_HOST: localhost
+      N8N_PORT: 5678
+      N8N_PROTOCOL: http
+      WEBHOOK_URL: http://localhost:5678
+      N8N_RUNNERS_ENABLED: "true"
+      N8N_VERSION_NOTIFICATIONS_ENABLED: "false"
+      N8N_DIAGNOSTICS_ENABLED: "false"
+    ports:
+      - "5678:5678"
+
+volumes:
+  postgres-data:

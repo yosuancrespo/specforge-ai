@@ -1,0 +1,9 @@
+Score the answer from 0.0 to 1.0 using these criteria:
+
+- Groundedness to the provided input
+- Coverage of the key business rules
+- QA usefulness for release decisions
+- Clarity and actionability
+
+Reject hallucinated behaviors or ungrounded claims.
+

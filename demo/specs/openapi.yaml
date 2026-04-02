@@ -1,0 +1,147 @@
+openapi: 3.1.0
+info:
+  title: SpecForge Demo Order API
+  version: 0.1.0
+servers:
+  - url: http://localhost:8080
+paths:
+  /health:
+    get:
+      summary: Health check
+      responses:
+        "200":
+          description: OK
+  /orders:
+    post:
+      summary: Create an order
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateOrderRequest"
+      responses:
+        "201":
+          description: Order created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+        "400":
+          description: Validation error
+  /orders/{orderId}:
+    get:
+      summary: Get an order
+      parameters:
+        - in: path
+          name: orderId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Order detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+  /orders/{orderId}/summary:
+    get:
+      summary: Get the financial summary of an order
+      parameters:
+        - in: path
+          name: orderId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Order summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrderSummary"
+  /orders/{orderId}/status:
+    post:
+      summary: Move an order to the next valid status
+      parameters:
+        - in: path
+          name: orderId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [status]
+              properties:
+                status:
+                  type: string
+                  enum: [confirmed, fulfilled, cancelled]
+      responses:
+        "200":
+          description: Updated order
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+        "400":
+          description: Invalid transition
+components:
+  schemas:
+    OrderItem:
+      type: object
+      required: [sku, quantity]
+      properties:
+        sku:
+          type: string
+        quantity:
+          type: integer
+          minimum: 1
+    CreateOrderRequest:
+      type: object
+      required: [customer_id, items, amount, currency]
+      properties:
+        customer_id:
+          type: string
+        items:
+          type: array
+          minItems: 1
+          items:
+            $ref: "#/components/schemas/OrderItem"
+        amount:
+          type: number
+          exclusiveMinimum: 0
+        discount:
+          type: number
+          minimum: 0
+        currency:
+          type: string
+      additionalProperties: false
+    Order:
+      allOf:
+        - $ref: "#/components/schemas/CreateOrderRequest"
+        - type: object
+          required: [id, status]
+          properties:
+            id:
+              type: string
+            status:
+              type: string
+              enum: [draft, confirmed, fulfilled, cancelled]
+    OrderSummary:
+      type: object
+      required: [order_id, amount, discount, final_total]
+      properties:
+        order_id:
+          type: string
+        amount:
+          type: number
+        discount:
+          type: number
+        final_total:
+          type: number
+

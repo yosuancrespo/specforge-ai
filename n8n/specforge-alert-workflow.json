@@ -1,0 +1,86 @@
+{
+  "name": "SpecForge Failure Alert",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "specforge-alert",
+        "responseMode": "onReceived"
+      },
+      "id": "WebhookNode",
+      "name": "SpecForge Alert Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json[\"recommendation\"]}}",
+              "operation": "equal",
+              "value2": "needs-attention"
+            }
+          ]
+        }
+      },
+      "id": "IfNode",
+      "name": "Needs Attention?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [520, 300]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "title",
+              "value": "SpecForge AI detected a regression"
+            },
+            {
+              "name": "body",
+              "value": "={{$json[\"summary\"]}}"
+            }
+          ]
+        }
+      },
+      "id": "SetNode",
+      "name": "Prepare Issue Draft",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2,
+      "position": [780, 220]
+    }
+  ],
+  "connections": {
+    "SpecForge Alert Webhook": {
+      "main": [
+        [
+          {
+            "node": "Needs Attention?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Needs Attention?": {
+      "main": [
+        [
+          {
+            "node": "Prepare Issue Draft",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "versionId": "specforge-workflow-v1"
+}
+

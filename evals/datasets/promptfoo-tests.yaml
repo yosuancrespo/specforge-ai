@@ -1,0 +1,18 @@
+- description: requirements extraction includes validation rules
+  vars:
+    spec_excerpt: "Orders must contain at least one item and amount must be strictly greater than zero."
+  assert:
+    - type: icontains
+      value: amount
+    - type: icontains
+      value: item
+
+- description: defect triage mentions summary risk
+  vars:
+    finding_context: "The final total is computed as amount plus discount."
+  assert:
+    - type: icontains
+      value: discount
+    - type: icontains
+      value: total
+
